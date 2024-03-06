@@ -1,0 +1,6 @@
+Computed April 8 2024 eclipse path coodinates provided by: https://eclipse.gsfc.nasa.gov/SEpath/SEpath2001/SE2024Apr08Tpath.html
+"Eclipse Predictions by Fred Espenak, NASA's GSFC"
+
+Other eclipse paths:
+Future: https://eclipse.gsfc.nasa.gov/SEgoogle/SEgoogle2021.html
+Recent Past: https://eclipse.gsfc.nasa.gov/SEdecade/SEdecade2011.html
