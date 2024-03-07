@@ -38,67 +38,90 @@ function mapInit(container: HTMLElement, onLoad) {
 }
 
 function mapUpdateEclipsePath(map: Map, eclipsePath) {
-  map.addSource("eclipse-path-geojson", {
-    type: "geojson",
-    data: eclipsePath,
-  });
+  console.log("update", eclipsePath);
 
-  map.addLayer({
-    id: "eclipse-umbra-extent",
-    type: "fill",
-    source: "eclipse-path-geojson",
-    paint: {
-      "fill-color": "#888888",
-      "fill-opacity": 0.7,
-    },
-    filter: ["==", "$type", "Polygon"],
-  });
+  const source = map.getSource("eclipse-path-geojson");
+  if (source) {
+    source.setData(eclipsePath);
+  } else {
+    map.addSource("eclipse-path-geojson", {
+      type: "geojson",
+      data: eclipsePath,
+    });
+  }
 
-  map.addLayer({
-    id: "eclipse-center-line",
-    type: "line",
-    source: "eclipse-path-geojson",
-    layout: {
-      "line-join": "round",
-      "line-cap": "round",
-    },
-    paint: {
-      "line-color": "#444",
-      // "line-width": 8,
-      // Line width interpolation based on zoom level - https://github.com/mapbox/mapbox-gl-js/issues/5861#issuecomment-352033339
-      "line-width": [
-        "interpolate",
-        ["exponential", 2],
-        ["zoom"],
-        10,
-        ["*", 200, ["^", 2, -6]],
-        24,
-        ["*", 200, ["^", 2, 8]],
-      ],
-    },
-    filter: ["==", "$type", "LineString"],
-  });
+  if (!map.getLayer("eclipse-umbra-extent")) {
+    map.addLayer({
+      id: "eclipse-umbra-extent",
+      type: "fill",
+      source: "eclipse-path-geojson",
+      paint: {
+        "fill-color": "#888888",
+        "fill-opacity": 0.7,
+      },
+      filter: ["==", "$type", "Polygon"],
+    });
+  }
+
+  if (!map.getLayer("eclipse-center-line")) {
+    map.addLayer({
+      id: "eclipse-center-line",
+      type: "line",
+      source: "eclipse-path-geojson",
+      layout: {
+        "line-join": "round",
+        "line-cap": "round",
+      },
+      paint: {
+        "line-color": "#444",
+        // "line-width": 8,
+        // Line width interpolation based on zoom level - https://github.com/mapbox/mapbox-gl-js/issues/5861#issuecomment-352033339
+        "line-width": [
+          "interpolate",
+          ["exponential", 2],
+          ["zoom"],
+          10,
+          ["*", 200, ["^", 2, -6]],
+          24,
+          ["*", 200, ["^", 2, 8]],
+        ],
+      },
+      filter: ["==", "$type", "LineString"],
+    });
+  }
 }
 
-export default function EclipseMap() {
+export default function EclipseMap({ pathData }: { pathData: any }) {
+  // TODO: Be more specific about the path data format
   const mapContainer = useRef<HTMLDivElement | null>(null);
   const map = useRef<Map | null>(null);
+  const [mapReady, setMapReady] = useState(false);
 
   const [eclipseGeoJson, setEclipseGeoJson] = useState(null);
 
   useEffect(() => {
     if (map.current) return; // initialize map only once
     if (mapContainer.current) {
-
       // Once the map is loaded, then start setting layers.
       // TODO: This forces us to wait for the map to load before evening beginning to fetch the path table file. Should be able to prefetch the table if needed, then wait to set layers, etc.
       const onMapLoad = () => {
-        fetchEclipse("/eclipse_path_tables/2024-04-08.txt").then(pathGeoJson => mapUpdateEclipsePath(map.current as Map, pathGeoJson));
-      }
+        fetchEclipse("/eclipse_path_tables/2024-04-08.txt").then(
+          (pathGeoJson) => mapUpdateEclipsePath(map.current as Map, pathGeoJson)
+        );
+        setMapReady(true);
+      };
 
       map.current = mapInit(mapContainer.current, onMapLoad);
     }
   });
+
+  useEffect(() => {
+    console.log("fire effect", mapReady);
+    // When the path data prop updates, pass the data to the Map instance.
+    if (mapReady) {
+      mapUpdateEclipsePath(map.current as Map, pathData);
+    }
+  }, [pathData]);
 
   // useEffect(() => {
   //   fetchEclipse("/eclipse_path_tables/2024-04-08.txt").then(setEclipseGeoJson);

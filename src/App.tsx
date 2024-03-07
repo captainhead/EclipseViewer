@@ -1,36 +1,52 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useCallback, useEffect, useState } from "react";
+import { Box, AppBar, Typography, Container } from "@mui/material";
+import axios from "axios";
 
-function App() {
-  const [count, setCount] = useState(0)
+import EclipsePathSelector from "./EclipsePathSelector";
+import EclipseMap from "./EclipseMap.tsx";
+import AppContext from "./AppContext";
 
-  return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-      Hello
-    </>
-  )
+import parseEclipseTable from "./map/parseEclipseTable.ts";
+
+import EclipseTables from "./assets/eclipse_tables.json";
+
+async function fetchEclipsePath(url: string) {
+  const res = await axios.get(url);
+  const table = res.data;
+  const result = parseEclipseTable(table);
+  return result;
 }
 
-export default App
+function App() {
+  const [eclipsePaths, setEclipsePaths] = useState(EclipseTables.tables);
+  const [eclipsePathCurrent, setEclipsePathCurrent] = useState(
+    EclipseTables.tables[0]
+  );
+  const [eclipsePathGeoJson, setEclipsePathGeoJson] = useState({});
+
+  useEffect(() => {
+    fetchEclipsePath(eclipsePathCurrent.url).then(setEclipsePathGeoJson);
+  }, [eclipsePathCurrent]);
+
+  const handleOnChange = useCallback((value: string) => {
+    const current = EclipseTables.tables.find((t) => t.name === value);
+    if (current) {
+      setEclipsePathCurrent(current);
+    }
+  }, []);
+
+  return (
+    <AppContext.Provider
+      value={{ eclipsePaths, eclipsePathCurrent, eclipsePathGeoJson }}
+    >
+      <Box sx={{ flex: 1, display: "flex", flexDirection: "column" }}>
+        <EclipsePathSelector onChange={handleOnChange} />
+        <Box sx={{ flex: 1, display: "flex" }}>
+          <EclipseMap pathData={eclipsePathGeoJson}/>
+        </Box>
+      </Box>
+    </AppContext.Provider>
+  );
+}
+
+export default App;
