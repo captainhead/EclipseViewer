@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { Box, AppBar, Typography, Container } from "@mui/material";
+import { Box} from "@mui/material";
 import axios from "axios";
 
 import EclipsePathSelector from "./EclipsePathSelector";
@@ -18,7 +18,7 @@ async function fetchEclipsePath(url: string) {
 }
 
 function App() {
-  const [eclipsePaths, setEclipsePaths] = useState(EclipseTables.tables);
+  const [eclipsePaths /* , setEclipsePaths */] = useState(EclipseTables.tables); // TODO: Load set of eclipse path tables dynamically and allow uploading of other datasets.
   const [eclipsePathCurrent, setEclipsePathCurrent] = useState(
     EclipseTables.tables[0]
   );

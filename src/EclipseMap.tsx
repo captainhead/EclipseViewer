@@ -1,20 +1,12 @@
 // @ts-ignore no-unused-vars React
 import React, { useRef, useEffect, useState } from "react";
 import mapboxgl, { Map } from "mapbox-gl";
-// import useFetch from "react-fetch-hook";
-import axios from "axios";
 
 import "mapbox-gl/dist/mapbox-gl.css";
 import styles from "./EclipseMap.module.css";
 
-import parseEclipseTable from "./map/parseEclipseTable";
-
-async function fetchEclipse(url: string) {
-  const res = await axios.get(url);
-  const table = res.data;
-  const result = parseEclipseTable(table);
-  return result;
-}
+const DEFAULT_ZOOM = 3;
+const TRANSITION_DURATION_CHANGE_ECLIPSE = 2000;
 
 function mapInit(container: HTMLElement, onLoad) {
   mapboxgl.accessToken =
@@ -24,8 +16,8 @@ function mapInit(container: HTMLElement, onLoad) {
     container: container,
     style: "mapbox://styles/mapbox/outdoors-v12",
     // style: "mapbox://styles/mapbox/satellite-streets-v12",
-    center: [-90, 45],
-    zoom: 3,
+    // center: [-90, 45],
+    zoom: DEFAULT_ZOOM,
   });
 
   m.on("style.load", () => {
@@ -51,44 +43,58 @@ function mapUpdateEclipsePath(map: Map, eclipsePath) {
   }
 
   if (!map.getLayer("eclipse-umbra-extent")) {
+    // Render polygon along path of eclipse with outline and transparent fill
     map.addLayer({
       id: "eclipse-umbra-extent",
       type: "fill",
       source: "eclipse-path-geojson",
       paint: {
-        "fill-color": "#888888",
+        "fill-color": "#888",
         "fill-opacity": 0.7,
+      },
+      filter: ["==", "$type", "Polygon"],
+    });
+
+    map.addLayer({
+      id: "eclipse-umbra-extent-outline",
+      type: "line",
+      source: "eclipse-path-geojson",
+      paint: {
+        "line-color": "#444",
+        // "line-opacity": 0.7,
+        "line-width": 2,
       },
       filter: ["==", "$type", "Polygon"],
     });
   }
 
-  if (!map.getLayer("eclipse-center-line")) {
-    map.addLayer({
-      id: "eclipse-center-line",
-      type: "line",
-      source: "eclipse-path-geojson",
-      layout: {
-        "line-join": "round",
-        "line-cap": "round",
-      },
-      paint: {
-        "line-color": "#444",
-        // "line-width": 8,
-        // Line width interpolation based on zoom level - https://github.com/mapbox/mapbox-gl-js/issues/5861#issuecomment-352033339
-        "line-width": [
-          "interpolate",
-          ["exponential", 2],
-          ["zoom"],
-          10,
-          ["*", 200, ["^", 2, -6]],
-          24,
-          ["*", 200, ["^", 2, 8]],
-        ],
-      },
-      filter: ["==", "$type", "LineString"],
-    });
-  }
+  // Render Center line
+  // if (!map.getLayer("eclipse-center-line")) {
+  //   map.addLayer({
+  //     id: "eclipse-center-line",
+  //     type: "line",
+  //     source: "eclipse-path-geojson",
+  //     layout: {
+  //       "line-join": "round",
+  //       "line-cap": "round",
+  //     },
+  //     paint: {
+  //       "line-color": "#444",
+  //       "line-width": 2,
+  //       // Line width interpolation based on zoom level - https://github.com/mapbox/mapbox-gl-js/issues/5861#issuecomment-352033339
+  //       // "line-width": [
+  //       //   "interpolate",
+  //       //   ["exponential", 2],
+  //       //   ["zoom"],
+  //       //   10,
+  //       //   ["*", 200, ["^", 2, -6]],
+  //       //   24,
+  //       //   ["*", 200, ["^", 2, 8]],
+  //       // ],
+  //     },
+  //     filter: ["==", "$type", "LineString"],
+  //   });
+  // }
 }
 
 export default function EclipseMap({ pathData }: { pathData: any }) {
@@ -97,41 +103,32 @@ export default function EclipseMap({ pathData }: { pathData: any }) {
   const map = useRef<Map | null>(null);
   const [mapReady, setMapReady] = useState(false);
 
-  const [eclipseGeoJson, setEclipseGeoJson] = useState(null);
-
   useEffect(() => {
     if (map.current) return; // initialize map only once
     if (mapContainer.current) {
-      // Once the map is loaded, then start setting layers.
-      // TODO: This forces us to wait for the map to load before evening beginning to fetch the path table file. Should be able to prefetch the table if needed, then wait to set layers, etc.
-      const onMapLoad = () => {
-        fetchEclipse("/eclipse_path_tables/2024-04-08.txt").then(
-          (pathGeoJson) => mapUpdateEclipsePath(map.current as Map, pathGeoJson)
-        );
-        setMapReady(true);
-      };
-
-      map.current = mapInit(mapContainer.current, onMapLoad);
+      map.current = mapInit(mapContainer.current, () => setMapReady(true));
     }
   });
 
   useEffect(() => {
-    console.log("fire effect", mapReady);
     // When the path data prop updates, pass the data to the Map instance.
     if (mapReady) {
       mapUpdateEclipsePath(map.current as Map, pathData);
     }
+  }, [pathData, mapReady]);
+
+  useEffect(() => {
+    const points = pathData?.features?.[0].geometry.coordinates;
+
+    if (points) {
+      const center = points[Math.floor(points.length / 2)];
+
+      map.current?.flyTo({ center, zoom: DEFAULT_ZOOM, duration: TRANSITION_DURATION_CHANGE_ECLIPSE });
+
+      // TODO: Option for future - zoom to bounds of eclipse path
+      // map.fitBounds([<southwest_longlat>], [<northeast_longlat]);
+    }
   }, [pathData]);
-
-  // useEffect(() => {
-  //   fetchEclipse("/eclipse_path_tables/2024-04-08.txt").then(setEclipseGeoJson);
-  // }, []);
-
-  // useEffect(() => {
-  //   if (map.current) {
-  //     mapUpdateEclipsePath(map.current, eclipseGeoJson);
-  //   }
-  // }, [eclipseGeoJson]);
 
   return <div ref={mapContainer} className={styles["eclipse-map-container"]} />;
 }

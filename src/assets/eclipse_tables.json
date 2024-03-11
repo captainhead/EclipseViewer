@@ -1,7 +1,34 @@
 {
   "tables": [
-    { "name": "April 8, 2024", "url": "/eclipse_path_tables/2024-04-08.txt" },
-    { "name": "December 4, 2021", "url": "/eclipse_path_tables/2021-12-04.txt" },
-    { "name": "August 21, 2017", "url": "/eclipse_path_tables/2017-08-21.txt" }
+    {
+      "name": "2024, April 8",
+      "type": "total",
+      "url": "/eclipse_path_tables/2024-04-08.txt",
+      "sourceURL": "https://eclipse.gsfc.nasa.gov/SEpath/SEpath2001/SE2024Apr08Tpath.html"
+    },
+    {
+      "name": "2021, December 4",
+      "type": "total",
+      "url": "/eclipse_path_tables/2021-12-04.txt",
+      "sourceURL": "https://eclipse.gsfc.nasa.gov/SEpath/SEpath2001/SE2021Dec04Tpath.html"
+    },
+    {
+      "name": "2019, July 2",
+      "type": "total",
+      "url": "/eclipse_path_tables/2019-07-02.txt",
+      "sourceURL": "https://eclipse.gsfc.nasa.gov/SEpath/SEpath2001/SE2019Jul02Tpath.html"
+    },
+    {
+      "name": "2017, August 21",
+      "type": "total",
+      "url": "/eclipse_path_tables/2017-08-21.txt",
+      "sourceURL": "https://eclipse.gsfc.nasa.gov/SEpath/SEpath2001/SE2017Aug21Tpath.html"
+    },
+    {
+      "name": "1979, February 26",
+      "type": "total",
+      "url": "/eclipse_path_tables/1979-02-26.txt",
+      "sourceURL": "https://eclipse.gsfc.nasa.gov/SEpath/SEpath1951/SE1979Feb26Tpath.html"
+    }
   ]
 }
