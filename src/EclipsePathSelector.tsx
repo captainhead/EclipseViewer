@@ -2,14 +2,13 @@ import { useContext } from "react";
 import {
   Container,
   FormControl,
-  InputLabel,
   MenuItem,
   Select,
   Typography,
 } from "@mui/material";
 import AppContext from "./AppContext";
 
-const ECLIPSE_SELECT_LABEL = "Choose an Eclipse"; // Just bizarre this needs to be used in both InputLabel and label= prop
+// const ECLIPSE_SELECT_LABEL = "Choose an Eclipse"; // Just bizarre this needs to be used in both InputLabel and label= prop
 
 export default function ({ onChange }: { onChange: (value: string) => void }) {
   const appContext = useContext(AppContext);

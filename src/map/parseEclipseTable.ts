@@ -1,24 +1,40 @@
-// type Coordinate = {
-//   lat: number
-//   long: number
-// }
-
-// type EclipseRecord = {
-//   timeStamp: string
-//   limitNorth: Coordinate
-//   limitSouth: Coordinate
-//   limitCenter: Coordinate
-//   moonSunDiameterRatio: number
-//   duration: string // TODO: perhaps number of seconds would be better
-// }
-
+// @ts-ignore Missing type definitions.
 import GeoJSON from "geojson";
 
-const COORD_TYPES = ["limitNorth", "limitSouth", "limitCenter"];
+// type Coordinate = {
+//   lat: number | undefined;
+//   long: number | undefined;
+// };
+// type Coordinate = (number | undefined)[];
 
-function readLine(l) {
+// type EclipseRecord = {
+//   timeStamp: string;
+//   limitNorth: Coordinate;
+//   limitSouth: Coordinate;
+//   limitCenter: Coordinate;
+//   moonSunDiameterRatio: number;
+//   duration: string; // TODO: perhaps number of seconds would be better
+// };
+type EclipseRecord = { [key: string]: any};
+
+const COORD_TYPES = ["limitNorth", "limitSouth", "limitCenter"];
+// enum COORD_TYPES_ENUM {
+//   limitNorth = "limitNorth",
+//   limitSouth = "limitSouth",
+//   limitCenter = "limitCenter"
+// }
+// const DEFAULT_ECLIPSE_RECORD: EclipseRecord = {
+//   timeStamp: "",
+//   limitNorth: [undefined, undefined],
+//   limitSouth: [undefined, undefined],
+//   limitCenter: [undefined, undefined],
+//   moonSunDiameterRatio: 0,
+//   duration: "",
+// };
+
+function readLine(l: string): EclipseRecord | undefined {
   let currentIndex = 0; // Store current index where string parsing has progressed.
-  const result = {};
+  const result: EclipseRecord = {};
 
   const timeStampRegex = /^\s*((?:\d+:\d+)|Limits)/g; // Adding global flag g so the regex stores lastIndex
   const timeStampMatch = timeStampRegex.exec(l);
@@ -40,9 +56,9 @@ function readLine(l) {
   const ratioRegex = /(\d+[.]\d+)/g;
   ratioRegex.lastIndex = currentIndex;
   const ratioMatch = ratioRegex.exec(l);
+  const ratio = ratioMatch ? parseFloat(ratioMatch[1]) : null
+  result.moonSunDiameterRatio = ratio;
   currentIndex = ratioRegex.lastIndex;
-
-  result.moonSunDiameterRatio = parseFloat(ratioMatch);
 
   // Skip Sun altitude, azimuth angles, and path width
   const skipRegex = /\d+\s+(?:\d+|[-])\s+\d+/g;
@@ -54,13 +70,15 @@ function readLine(l) {
   durationRegex.lastIndex = currentIndex;
   const durationMatch = durationRegex.exec(l);
   // TODO: Format into a meaningful time value for display.
-  result.duration = durationMatch[1];
+  result.duration = durationMatch?.[1];
   // currentIndex = durationRegex.lastIndex; // No further need to maintain index, this is the end of the line.
+
+  console.log(result);
 
   return result;
 }
 
-function parseNextCoordinate(l, index) {
+function parseNextCoordinate(l: string, index: number) {
   let i = index;
 
   const latRegex = /([-])|(?:(\d+) (\d+[.]\d+)([N|S]))/g;
@@ -94,22 +112,20 @@ function parseNextCoordinate(l, index) {
   return { coord: [long, lat], nextIndex: i };
 }
 
-function parseEclipseTable(text) {
+function parseEclipseTable(text: string) {
   const lines = text.split("\n");
-  // console.log(lines);
 
-  // console.log(lines.length);
-  const parsedPathCordinates = lines.reduce((acc, val) => {
+  const parsedPathCordinates = lines.reduce<EclipseRecord[]>((acc, val) => {
     const c = readLine(val);
     return c ? [...acc, c] : acc;
   }, []);
-  // console.log(parsedPathCordinates);
 
-  // TODO: This temporarily filters out points that are missing/undefined. I think these should be duplicated from previous entries.
+  // TODO: This temporarily filters out points that are missing/undefined.
+  // I believe the intent is that a blank/missing entry means it is duplicated from the previous entry.
   const path = parsedPathCordinates.filter((p) => {
     let result = true;
     for (let t in COORD_TYPES) {
-      result = p[COORD_TYPES[t]].every((v) => !!v);
+      result = p[COORD_TYPES[t]].every((v: any) => !!v);
       if (!result) break;
     }
     return result;

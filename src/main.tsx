@@ -4,10 +4,8 @@ import { CssBaseline } from "@mui/material";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 
 import App from "./App.tsx";
-import EclipseMap from "./EclipseMap.tsx";
 
 import "./index.css";
-import styles from "./main.module.css";
 
 import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";

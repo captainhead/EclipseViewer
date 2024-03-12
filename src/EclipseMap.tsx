@@ -1,6 +1,6 @@
 // @ts-ignore no-unused-vars React
 import React, { useRef, useEffect, useState } from "react";
-import mapboxgl, { Map } from "mapbox-gl";
+import mapboxgl, { Map, GeoJSONSource } from "mapbox-gl";
 
 import "mapbox-gl/dist/mapbox-gl.css";
 import styles from "./EclipseMap.module.css";
@@ -8,7 +8,8 @@ import styles from "./EclipseMap.module.css";
 const DEFAULT_ZOOM = 3;
 const TRANSITION_DURATION_CHANGE_ECLIPSE = 2000;
 
-function mapInit(container: HTMLElement, onLoad) {
+// TODO: Find a better way to specify onLoad type that matches the mapboxgl .on API type.
+function mapInit(container: HTMLElement, onLoad:any) {
   mapboxgl.accessToken =
     "pk.eyJ1Ijoia2l0bGl0dGxlIiwiYSI6ImNpdDI3b3NpYjBzbjUydXFwMDJlMzF6Y2sifQ.Qx2RhMP8j2VfFUvOuA1I7A";
 
@@ -29,10 +30,10 @@ function mapInit(container: HTMLElement, onLoad) {
   return m;
 }
 
-function mapUpdateEclipsePath(map: Map, eclipsePath) {
+function mapUpdateEclipsePath(map: Map, eclipsePath: any) {
   console.log("update", eclipsePath);
 
-  const source = map.getSource("eclipse-path-geojson");
+  const source = map.getSource("eclipse-path-geojson") as GeoJSONSource;
   if (source) {
     source.setData(eclipsePath);
   } else {
@@ -123,7 +124,11 @@ export default function EclipseMap({ pathData }: { pathData: any }) {
     if (points) {
       const center = points[Math.floor(points.length / 2)];
 
-      map.current?.flyTo({ center, zoom: DEFAULT_ZOOM, duration: TRANSITION_DURATION_CHANGE_ECLIPSE });
+      map.current?.flyTo({
+        center,
+        zoom: DEFAULT_ZOOM,
+        duration: TRANSITION_DURATION_CHANGE_ECLIPSE,
+      });
 
       // TODO: Option for future - zoom to bounds of eclipse path
       // map.fitBounds([<southwest_longlat>], [<northeast_longlat]);
