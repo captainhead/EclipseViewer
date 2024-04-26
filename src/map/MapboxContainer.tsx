@@ -1,4 +1,3 @@
-// import React, { useRef, useEffect, useState } from "react";
 import { PropsWithChildren, useCallback, useEffect, useState } from "react";
 import mapboxgl, { LngLatBoundsLike, Map, Projection } from "mapbox-gl";
 
@@ -10,7 +9,7 @@ import styles from "./MapboxContainer.module.css";
 
 const DEFAULT_ZOOM = 3;
 
-// TODO: Monitor and rotate this token if it's misused.
+// TODO: This is a generic mapbox access token. Might need to add a mechanism to rotate the token if necessary.
 mapboxgl.accessToken =
   "pk.eyJ1Ijoia2l0bGl0dGxlIiwiYSI6ImNpdDI3b3NpYjBzbjUydXFwMDJlMzF6Y2sifQ.Qx2RhMP8j2VfFUvOuA1I7A";
 
