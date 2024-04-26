@@ -1,0 +1,57 @@
+Retrieved from https://eclipse.gsfc.nasa.gov/SEbeselm/SEbeselm2001/SE2024Apr08Tbeselm.html            
+
+Besselian Elements for the Total Solar Eclipse of  2024 Apr 08
+
+            Equatorial Conjunction:     18:37:18.2 TDT     J.D. = 2460409.275905
+              (Sun & Moon in R.A.)    (=18:36:07.6 UT)
+
+             Ecliptic Conjunction:      18:22:00.4 TDT     J.D. = 2460409.265282
+             (Sun & Moon in Ec. Lo.)  (=18:20:49.7 UT)
+
+                  Instant of            18:18:29.0 TDT     J.D. = 2460409.262835
+               Greatest Eclipse:      (=18:17:18.3 UT)
+
+
+            --------------------------------------------------------------------------- 
+                        Gamma =  0.3431            Ephemerides = VSOP87/ELP2000-85
+            Eclipse Magnitude =  1.0566           Lunation No. =     300
+                           ΔT =    70.6 s         Saros Series =  139 (30/71)
+
+            Lunar Radius   k1 = 0.272488 (Penumbra)        Shift in      Δb =  0.00"
+             Constants:    k2 = 0.272281 (Umbra)       Lunar Position:   Δl =  0.00"
+
+            --------------------------------------------------------------------------- 
+            Geocentric Coordinates of Sun & Moon at Greatest Eclipse (VSOP87/ELP2000-85):
+
+            Sun:       R.A. = 01h11m36.9s         Moon:      R.A. = 01h10m57.5s
+                       Dec. =+07°35'29.4"                    Dec. =+07°53'55.3"
+              Semi-Diameter =    15'58.2"           Semi-Diameter =    16'36.3"
+                Eq.Hor.Par. =       08.8"             Eq.Hor.Par. =  1°00'56.6"
+
+            --------------------------------------------------------------------------- 
+            Polynomial Besselian Elements for:   2024 Apr 08   18:00:00.0 TDT  (=t0)
+
+              n        x          y         d          l1         l2          μ
+
+              0  -0.318157   0.219747    7.58620   0.535813  -0.010274   89.59122
+              1   0.5117105  0.2709586   0.014844  0.0000618  0.0000615  15.004084
+              2   0.0000326 -0.0000594  -0.000002 -0.0000128 -0.0000127
+              3  -0.0000085 -0.0000047
+
+                             Tan ƒ1 = 0.0046683    Tan ƒ2 = 0.0046450
+
+            At time t1 (decimal hours), each Besselian element is evaluated by:
+
+               a = a0 + a1*t + a2*t^2 + a3*t^3    (or a = Σ [an*t^n]; n = 0 to 3)
+
+                  where:    a = x, y, d, l1, l2, or μ
+                            t = t1 - t0  (decimal hours) and t0 = 18.000 TDT
+
+
+            The Besselian elements were derived from a least-squares fit to elements
+            calculated at five uniformly spaced times over a six hour period centered at t0.
+            The Besselian elements are valid over the period 15.00 ≤ t0 ≤ 21.00 TDT.
+
+            Note that all times are expressed in Terrestrial Dynamical Time (TDT).
+
+                   Saros Series 139:  Member 30 of 71 eclipses in series.

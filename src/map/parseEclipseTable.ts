@@ -1,3 +1,16 @@
+/*
+
+  MODULE NOT IN USE
+
+  A previous iteration of the app would consume precomputed eclipse path tables, and render them as GeoJSON polygons.
+
+*/
+
+/* 
+
+// This module can read from Fred Espenak's precomputed tables of northern/southern limits of the
+// umbral shadow (i.e. area of totality) of a total solar eclipse and convert those sets of coordinates to GeoJSON polygons.
+
 // @ts-ignore Missing type definitions.
 import GeoJSON from "geojson";
 
@@ -72,8 +85,6 @@ function readLine(l: string): EclipseRecord | undefined {
   // TODO: Format into a meaningful time value for display.
   result.duration = durationMatch?.[1];
   // currentIndex = durationRegex.lastIndex; // No further need to maintain index, this is the end of the line.
-
-  console.log(result);
 
   return result;
 }
@@ -151,3 +162,4 @@ function parseEclipseTable(text: string) {
 }
 
 export default parseEclipseTable;
+ */

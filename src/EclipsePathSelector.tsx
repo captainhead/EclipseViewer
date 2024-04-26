@@ -1,3 +1,13 @@
+/*
+
+  MODULE NOT IN USE
+
+  A previous iteration of the app would consume precomputed eclipse path tables, and render them as GeoJSON polygons.
+
+*/
+
+
+/* 
 import { useContext } from "react";
 import {
   Container,
@@ -25,7 +35,6 @@ export default function ({ onChange }: { onChange: (value: string) => void }) {
     >
       <Typography variant="h6">Select an eclipse to view:</Typography>
       <FormControl sx={{ m: 1 }}>
-        {/* <InputLabel id="eclipse-select-label">{ECLIPSE_SELECT_LABEL}</InputLabel> */}
         <Select
           id="eclipse-select"
           // label={ECLIPSE_SELECT_LABEL}
@@ -43,3 +52,4 @@ export default function ({ onChange }: { onChange: (value: string) => void }) {
     </Container>
   );
 }
+*/

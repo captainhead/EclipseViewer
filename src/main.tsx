@@ -20,7 +20,6 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
     <ThemeProvider theme={DEFAULT_THEME}>
       <CssBaseline />
       <App />
-      {/* <EclipseMap /> */}
     </ThemeProvider>
   </React.StrictMode>
 );
